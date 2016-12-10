@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"log"
 	"net/http"
 	"net/url"
@@ -17,23 +18,42 @@ var (
 	slack_api_url = "https://slack.com/api/chat.postMessage"
 )
 
+func validateENVValue() error {
+	if os.Getenv("PORT") == "" {
+		log.Println("$PORT must be set")
+		return errors.New("error!")
+	}
+	if os.Getenv("LINE_CHANNEL_SECRET") == "" {
+		log.Println("$LINE_CHANNEL_SECRET must be set")
+		return errors.New("error!")
+	}
+	if os.Getenv("LINE_CHANNEL_ACCESS_TOKEN") == "" {
+		log.Println("$LINE_CHANNEL_ACCESS_TOKEN must be set")
+		return errors.New("error!")
+	}
+	if os.Getenv("SLACK_TOKEN") == "" {
+		log.Println("$SLACK_TOKEN must be set")
+		return errors.New("error!")
+	}
+	if os.Getenv("SLACK_CHANNEL") == "" {
+		log.Println("$SLACK_CHANNEL must be set")
+		return errors.New("error!")
+	}
+
+	return nil
+
+}
+
 func main() {
 	port := os.Getenv("PORT")
 	line_channel_secret := os.Getenv("LINE_CHANNEL_SECRET")
 	line_channel_access_token := os.Getenv("LINE_CHANNEL_ACCESS_TOKEN")
 	slack_token := os.Getenv("SLACK_TOKEN")
+	var err error
 
-	if port == "" {
-		log.Fatal("$PORT must be set")
-	}
-	if line_channel_secret == "" {
-		log.Fatal("$LINE_CHANNEL_SECRET must be set")
-	}
-	if line_channel_access_token == "" {
-		log.Fatal("$LINE_CHANNEL_ACCESS_TOKEN must be set")
-	}
-	if slack_token == "" {
-		log.Fatal("$SLACK_TOKEN must be set")
+	err = validateENVValue()
+	if err != nil {
+		log.Fatal("all ENV must be set")
 	}
 
 	router := gin.New()
