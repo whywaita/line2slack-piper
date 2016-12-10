@@ -1,4 +1,26 @@
 {
   "name": "LINE to Slack piper",
-  "description": "LINE message post slack channel"
+  "description": "LINE message post slack channel",
+  "keywords": [
+    "line",
+    "slack",
+    "golang"
+  ],
+  "website": "https://github.com/whywaita/line2slack-piper",
+  "env": {
+    "LINE_CHANNEL_SECRET": {
+      "description": "LINE channel secret"
+    },
+    "LINE_CHANNEL_ACCESS_TOKEN": {
+      "description": "LINE channel access token"
+    },
+    "SLACK_TOKEN": {
+      "description": "slack token"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "https://github.com/kr/heroku-buildpack-go"
+    }
+  ]
 }
