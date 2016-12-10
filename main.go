@@ -44,6 +44,19 @@ func validateENVValue() error {
 
 }
 
+func makeSlackData(slack_token, text string) url.Values {
+	// make slack post data
+
+	slackData := url.Values{}
+	slackData.Set("token", slack_token)
+	slackData.Add("channel", os.Getenv("SLACK_CHANNEL"))
+	slackData.Add("username", "line2slack piper")
+	slackData.Add("text", text)
+
+	return slackData
+
+}
+
 func main() {
 	port := os.Getenv("PORT")
 	line_channel_secret := os.Getenv("LINE_CHANNEL_SECRET")
@@ -73,12 +86,7 @@ func main() {
 				switch message := event.Message.(type) {
 				case *linebot.TextMessage:
 
-					// make slack data
-					slackPostData := url.Values{}
-					slackPostData.Set("token", slack_token)
-					slackPostData.Add("channel", os.Getenv("SLACK_CHANNEL"))
-					slackPostData.Add("username", "line2slack piper")
-					slackPostData.Add("text", message.Text)
+					slackPostData := makeSlackData(slack_token, message.Text)
 
 					r, _ := http.NewRequest("POST", fmt.Sprintf("%s", slack_api_url), bytes.NewBufferString(slackPostData.Encode()))
 					r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
