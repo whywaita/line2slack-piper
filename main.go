@@ -16,6 +16,7 @@ import (
 
 var (
 	slack_api_url = "https://slack.com/api/chat.postMessage"
+	err           error
 )
 
 func validateENVValue() error {
@@ -61,7 +62,6 @@ func main() {
 	port := os.Getenv("PORT")
 	line_channel_secret := os.Getenv("LINE_CHANNEL_SECRET")
 	line_channel_access_token := os.Getenv("LINE_CHANNEL_ACCESS_TOKEN")
-	var err error
 
 	err = validateENVValue()
 	if err != nil {
@@ -80,25 +80,18 @@ func main() {
 		}
 		received, err := bot.ParseRequest(c.Request)
 
-		for _, event := range received {
+		for _, event := range received { // wait new post
 			if event.Type == linebot.EventTypeMessage {
 				switch message := event.Message.(type) {
-				case *linebot.TextMessage:
+				case *linebot.TextMessage: // if new post type is text
 
 					slackPostData := makeSlackData(message.Text)
 
+					// post to slack
 					r, _ := http.NewRequest("POST", fmt.Sprintf("%s", slack_api_url), bytes.NewBufferString(slackPostData.Encode()))
 					r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 					client.Do(r)
-					//resMessage := getResMessage(message.Text)
-					//if resMessage != "" {
-					//      postMessage := linebot.NewTextMessage(resMessage)
-					//      _, err = bot.ReplyMessage(event.ReplyToken, postMessage).Do()
-					//      if err != nil {
-					//              log.Print(err)
-					//      }
-					//}
 				}
 			}
 		}
