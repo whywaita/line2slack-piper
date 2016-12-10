@@ -16,6 +16,9 @@
     },
     "SLACK_TOKEN": {
       "description": "slack token"
+    },
+    "SLACK_CHANNEL": {
+      "description": "slack notify channel"
     }
   },
   "buildpacks": [

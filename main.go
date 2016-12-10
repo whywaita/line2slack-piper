@@ -56,7 +56,7 @@ func main() {
 					// make slack data
 					slackPostData := url.Values{}
 					slackPostData.Set("token", slack_token)
-					slackPostData.Add("channel", "#notifications")
+					slackPostData.Add("channel", os.Getenv("SLACK_CHANNEL"))
 					slackPostData.Add("username", "line2slack piper")
 					slackPostData.Add("text", message.Text)
 
