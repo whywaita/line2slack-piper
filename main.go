@@ -15,8 +15,8 @@ import (
 )
 
 var (
-	slack_api_url = "https://slack.com/api/chat.postMessage"
-	err           error
+	slackAPIURL = "https://slack.com/api/chat.postMessage"
+	err         error
 )
 
 func validateENVValue() error {
@@ -88,7 +88,7 @@ func main() {
 					slackPostData := makeSlackData(message.Text)
 
 					// post to slack
-					r, _ := http.NewRequest("POST", fmt.Sprintf("%s", slack_api_url), bytes.NewBufferString(slackPostData.Encode()))
+					r, _ := http.NewRequest("POST", fmt.Sprintf("%s", slackAPIURL), bytes.NewBufferString(slackPostData.Encode()))
 					r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 					client.Do(r)
